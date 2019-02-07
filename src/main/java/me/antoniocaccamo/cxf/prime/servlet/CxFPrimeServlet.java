@@ -5,9 +5,10 @@ import org.apache.cxf.Bus;
 import org.apache.cxf.BusFactory;
 import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
 
+import javax.servlet.annotation.WebServlet;
 import javax.xml.ws.Endpoint;
 
-
+@WebServlet(urlPatterns ="/services/*")
 public class CxFPrimeServlet extends CXFNonSpringServlet {
 
     @Override

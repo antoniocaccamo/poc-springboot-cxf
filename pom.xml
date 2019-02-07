@@ -1,121 +1,132 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 	http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>me.antoniocaccamo</groupId>
-  <artifactId>cxf-prime</artifactId>
-  <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>me : antoniocaccamo: cxf-prime</name>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>me.antoniocaccamo</groupId>
+	<artifactId>cxf-prime</artifactId>
+	<packaging>war</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>me : antoniocaccamo: cxf-prime</name>
 
-  <properties>
-    <cxf.version>3.3.0</cxf.version>
-  </properties>
-
-
-  <dependencies>
+	<properties>
+		<cxf.version>3.3.0</cxf.version>
+	</properties>
 
 
-    <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-transports-http</artifactId>
-      <version>${cxf.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-frontend-jaxws</artifactId>
-      <version>${cxf.version}</version>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-transports-http-jetty -->
-    <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-rt-transports-http-jetty</artifactId>
-      <version>${cxf.version}</version>
-    </dependency>
+	<dependencies>
 
 
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.0.1</version>
-      <scope>provided</scope>
-    </dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-transports-http-jetty -->
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http-jetty</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
 
 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>1.7.12</version>
+		</dependency>
 
 
-  </dependencies>
-
-  <build>
-
-    <finalName>cxf-prime</finalName>
-
-    <plugins>
-
-       <!--https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin-->
-      <plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>9.4.14.v20181114</version>
-      </plugin>
-
-      <!--<plugin>-->
-        <!--<groupId>org.apache.tomcat.maven</groupId>-->
-        <!--<artifactId>tomcat7-maven-plugin</artifactId>-->
-        <!--<version>2.2</version>-->
-      <!--</plugin>-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
 
 
+	</dependencies>
 
-      <plugin>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-codegen-plugin</artifactId>
-        <version>${cxf.version}</version>
-        <executions>
-          <execution>
-            <id>generate-sources</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <sourceRoot>${project.build.directory}/generated/cxf</sourceRoot>
-              <wsdlOptions>
-                <wsdlOption>
-                  <wsdl>${basedir}/src/main/resources/wsdl/hello.wsdl</wsdl>
-                  <bindingFiles>
-                    <bindingFile>${basedir}/src/main/binding/binding.xml</bindingFile>
-                  </bindingFiles>
-                </wsdlOption>
-              </wsdlOptions>
-              <defaultOptions>
-                <!--<extraargs>-->
-                  <!--<extraarg>-xjc-Xvalue-constructor</extraarg>-->
-                  <!--<extraarg>-impl</extraarg>-->
-                  <!--<extraarg>-verbose</extraarg>-->
-                  <!--<extraarg>-validate</extraarg>-->
-                  <!--<extraarg>-xjc-XtoString</extraarg>-->
-                <!--</extraargs>-->
-              </defaultOptions>
-            </configuration>
-            <goals>
-              <goal>wsdl2java</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+	<build>
+
+		<finalName>cxf-prime</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+
+			<!--https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.14.v20181114</version>
+			</plugin>
+
+			<!--<plugin> -->
+			<!--<groupId>org.apache.tomcat.maven</groupId> -->
+			<!--<artifactId>tomcat7-maven-plugin</artifactId> -->
+			<!--<version>2.2</version> -->
+			<!--</plugin> -->
 
 
 
-    </plugins>
+			<plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-codegen-plugin</artifactId>
+				<version>${cxf.version}</version>
+				<executions>
+					<execution>
+						<id>generate-sources</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<sourceRoot>${project.build.directory}/generated/cxf</sourceRoot>
+							<wsdlOptions>
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/hello.wsdl</wsdl>
+									<bindingFiles>
+										<bindingFile>${basedir}/src/main/binding/binding.xml</bindingFile>
+									</bindingFiles>
+								</wsdlOption>
+							</wsdlOptions>
+							<defaultOptions>
+								<!--<extraargs> -->
+								<!--<extraarg>-xjc-Xvalue-constructor</extraarg> -->
+								<!--<extraarg>-impl</extraarg> -->
+								<!--<extraarg>-verbose</extraarg> -->
+								<!--<extraarg>-validate</extraarg> -->
+								<!--<extraarg>-xjc-XtoString</extraarg> -->
+								<!--</extraargs> -->
+							</defaultOptions>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-  </build>
+
+
+		</plugins>
+
+	</build>
 
 
 </project>
