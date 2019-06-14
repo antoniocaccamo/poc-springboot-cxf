@@ -16,6 +16,15 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
+	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.cxf.xjc-utils</groupId>
+			<artifactId>cxf-xjc-runtime</artifactId>
+		</dependency>
+
+	</dependencies>
+
 
 	<build>
 
@@ -40,6 +49,7 @@
 									</bindingFiles>
 									<extraargs>
 										<extraarg>-verbose</extraarg>
+										<extraarg>-xjc-Xts:style:org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE</extraarg>
 									</extraargs>
 								</wsdlOption>
 							</wsdlOptions>
@@ -50,6 +60,13 @@
 						</goals>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.cxf.xjcplugins</groupId>
+						<artifactId>cxf-xjc-ts</artifactId>
+						<version>${cxf-xjc.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 

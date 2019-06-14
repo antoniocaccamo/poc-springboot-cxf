@@ -37,7 +37,7 @@ public class CxfPrimeClientJaxWsApplication implements ApplicationRunner {
 
         Greeting greeting = helloWorldService.sayHello(person);
 
-        log.info("greeting : {}", greeting.getText());
-        
+        log.info("greeting : {}", greeting);
+
     }
 }
