@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.jws.WebService;
 
 @WebService(
-        endpointInterface = "import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService" ,
+        endpointInterface = "me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService" ,
         targetNamespace   = "http://antoniocaccamo.me/cxf/prime/wsdl",
         name = "HelloWorldService"
 ) @Component

@@ -17,7 +17,7 @@
 	</parent>
 
 	<properties>
-		<main.class>me.antoniocaccamo.cxf.prime.server.jaxws.CxfPrimeServerJaxWsApplication</main.class>
+		<main.class>me.antoniocaccamo.cxf.prime.client.jaxws.CxfPrimeClientJaxWsApplication</main.class>
 	</properties>
 
 	<dependencies>
@@ -61,7 +61,6 @@
 						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
 					</jvmArguments>
 				</configuration>
-
 
 			</plugin>
 
