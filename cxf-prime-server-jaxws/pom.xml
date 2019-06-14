@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+	http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>me : antoniocaccamo: cxf-prime : server : jax-ws</name>
+
+
+	<artifactId>cxf-prime-server-jaxws</artifactId>
+	<packaging>war</packaging>
+
+	<parent>
+		<groupId>me.antoniocaccamo</groupId>
+		<artifactId>cxf-prime</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<main.class>me.antoniocaccamo.cxf.prime.server.jaxws.CxfPrimeServerJaxWsApplication</main.class>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>me.antoniocaccamo</groupId>
+			<artifactId>cxf-prime-common</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+		</dependency>
+
+
+	</dependencies>
+
+
+
+	<build>
+		<finalName>${pom.artifactId}</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<jvmArguments>
+						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+					</jvmArguments>
+				</configuration>
+
+
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>${java.home}\bin\java</executable>
+
+					<classpathScope>compile</classpathScope>
+
+					<arguments>
+						<argument>-classpath</argument>
+						<!-- automatically creates the classpath using all project dependencies,
+                            also adding the project build directory -->
+						<classpath />
+						<argument>${main.class}</argument>
+					</arguments>
+
+					<mainClass>${main.class}</mainClass>
+
+
+				</configuration>
+
+			</plugin>
+
+
+		</plugins>
+
+	</build>
+
+
+</project>

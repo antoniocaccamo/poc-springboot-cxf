@@ -21,12 +21,14 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<cxf.version>3.3.0</cxf.version>
+		<lombok.version>1.18.8</lombok.version>
 	</properties>
 
 	<modules>
 		<module>cxf-prime-common</module>
 		<module>cxf-prime-client</module>
-		<module>cxf-prime-server</module>
+		<module>cxf-prime-server-jaxws</module>
+		<module>cxf-prime-server-jaxrs</module>
 	</modules>
 
 
@@ -69,7 +71,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.6</version>
+			<version>${lombok.version}</version>
 		</dependency>
 
 
@@ -87,6 +89,23 @@
 
 		<finalName>cxf-prime</finalName>
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
@@ -116,6 +135,35 @@
 		</plugins>
 
 	</build>
+
+	<dependencyManagement>
+
+		<dependencies>
+			<!--
+            Pull in the cxf-parents as import scope to re-use the dependencyManagement
+            sections of those poms.   Those sections define the versions of various third
+            party deps that CXF used to build with and test with and we would like
+            to make sure the same versions are used for the samples
+            -->
+			<dependency>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-parent</artifactId>
+				<version>${cxf.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf</artifactId>
+				<version>${cxf.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+
+	</dependencyManagement>
 
 
 </project>

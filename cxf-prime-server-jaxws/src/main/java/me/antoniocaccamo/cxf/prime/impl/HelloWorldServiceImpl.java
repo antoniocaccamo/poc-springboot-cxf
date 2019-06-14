@@ -1,18 +1,19 @@
 package me.antoniocaccamo.cxf.prime.impl;
 
-import me.antoniocaccamo.cxf.prime.Greeting;
-import me.antoniocaccamo.cxf.prime.HelloWorldService;
-import me.antoniocaccamo.cxf.prime.Person;
+import me.antoniocaccamo.cxf.prime.xsd.Greeting;
+import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService;
+import me.antoniocaccamo.cxf.prime.xsd.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.jws.WebService;
 
 @WebService(
-        endpointInterface = "me.antoniocaccamo.cxf.prime.HelloWorldService" ,
-        targetNamespace   = "http://antoniocaccamo.me/cxf/prime",
+        endpointInterface = "import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService" ,
+        targetNamespace   = "http://antoniocaccamo.me/cxf/prime/wsdl",
         name = "HelloWorldService"
-)
+) @Component
 public class HelloWorldServiceImpl implements HelloWorldService {
 
     private static final Logger logger = LoggerFactory.getLogger(HelloWorldServiceImpl.class.getName());

@@ -1,0 +1,69 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+	http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>me : antoniocaccamo: cxf-prime : server : jax-rs</name>
+
+
+	<artifactId>cxf-prime-server-jaxrs</artifactId>
+	<packaging>war</packaging>
+
+	<parent>
+		<groupId>me.antoniocaccamo</groupId>
+		<artifactId>cxf-prime</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<main.class>me.antoniocaccamo.cxf.prime.server.jaxrs.CxfPrimeServerJaxRsApplication</main.class>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>me.antoniocaccamo</groupId>
+			<artifactId>cxf-prime-common</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-rs-service-description-swagger</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>swagger-ui</artifactId>
+			<version>3.20.9</version>
+		</dependency>
+
+	</dependencies>
+
+
+
+	<build>
+
+		<finalName>${artifactId}</finalName>
+
+
+	</build>
+
+
+</project>
