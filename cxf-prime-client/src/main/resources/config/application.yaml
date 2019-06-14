@@ -1,3 +1,7 @@
+spring:
+  main:
+    banner-mode: "off"
+
 client:
   HelloWorldService:
     address: http://localhost:8080/services/hello

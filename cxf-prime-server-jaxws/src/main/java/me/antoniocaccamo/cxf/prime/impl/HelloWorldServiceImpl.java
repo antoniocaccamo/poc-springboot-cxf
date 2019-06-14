@@ -1,5 +1,6 @@
 package me.antoniocaccamo.cxf.prime.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.antoniocaccamo.cxf.prime.xsd.Greeting;
 import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService;
 import me.antoniocaccamo.cxf.prime.xsd.Person;
@@ -13,14 +14,12 @@ import javax.jws.WebService;
         endpointInterface = "me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService" ,
         targetNamespace   = "http://antoniocaccamo.me/cxf/prime/wsdl",
         name = "HelloWorldService"
-) @Component
+) @Component @Slf4j
 public class HelloWorldServiceImpl implements HelloWorldService {
-
-    private static final Logger logger = LoggerFactory.getLogger(HelloWorldServiceImpl.class.getName());
 
     public Greeting sayHello(Person person) {
 
-        logger.info("greeting person {}", person);
+        log.info("greeting person {}", person);
 
         Greeting greeting = new Greeting();
         greeting.setText(
