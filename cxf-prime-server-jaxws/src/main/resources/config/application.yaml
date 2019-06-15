@@ -7,4 +7,11 @@ cxf:
 
 server:
   port: 8080
+  ssl:
+    key-store: /opt/development/workspaces/antoniocaccamo/cxf-prime/certificates/server/cxf-prime-server.keystore
+    key-alias: cxf-prime-server
+    key-password: Passw0rd!
+
+security:
+  require-ssl: true
 

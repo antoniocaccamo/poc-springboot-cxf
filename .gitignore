@@ -94,3 +94,6 @@ release.properties
 *.sh
 
 libssb-core/test-output/
+**/*.keystore
+**/*.cer
+
