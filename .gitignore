@@ -91,7 +91,7 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 
-*.sh
+# *.sh
 
 libssb-core/test-output/
 **/*.keystore
