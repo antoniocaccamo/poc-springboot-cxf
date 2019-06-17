@@ -1,6 +1,6 @@
 package me.antoniocaccamo.cxf.prime.servlet;
 
-import me.antoniocaccamo.cxf.prime.impl.HelloWorldServiceImpl;
+import me.antoniocaccamo.cxf.prime.server.jaxws.impl.HelloWorldServiceImpl;
 import org.apache.cxf.Bus;
 import org.apache.cxf.BusFactory;
 import org.apache.cxf.transport.servlet.CXFNonSpringServlet;

@@ -1,11 +1,9 @@
-package me.antoniocaccamo.cxf.prime.impl;
+package me.antoniocaccamo.cxf.prime.server.jaxws.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import me.antoniocaccamo.cxf.prime.xsd.Greeting;
 import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService;
 import me.antoniocaccamo.cxf.prime.xsd.Person;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.jws.WebService;

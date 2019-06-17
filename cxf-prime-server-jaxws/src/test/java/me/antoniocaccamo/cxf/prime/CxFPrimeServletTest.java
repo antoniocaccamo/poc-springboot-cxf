@@ -3,19 +3,11 @@
  */
 package me.antoniocaccamo.cxf.prime;
 
-import me.antoniocaccamo.cxf.prime.impl.HelloWorldServiceImpl;
-import org.apache.cxf.common.logging.Slf4jLogger;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Endpoint;
-import javax.xml.ws.Service;
 import java.net.MalformedURLException;
-import java.net.URL;
-
-import static org.junit.Assert.*;
 
 /**
  * @author conscaccamoantonio

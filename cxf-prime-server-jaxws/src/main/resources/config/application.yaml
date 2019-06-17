@@ -5,6 +5,7 @@ spring:
 cxf:
   path : /services
 
+
 server:
   port: 8080
   ssl:
@@ -15,3 +16,8 @@ server:
 security:
   require-ssl: true
 
+wss4j:
+  enabled: true
+  key-store: /opt/development/workspaces/antoniocaccamo/cxf-prime/certificates/server/cxf-prime-server.keystore
+  key-alias: cxf-prime-server
+  key-password: Passw0rd!

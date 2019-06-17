@@ -10,7 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import me.antoniocaccamo.cxf.prime.impl.HelloWorldServiceImpl;
+import me.antoniocaccamo.cxf.prime.server.jaxws.impl.HelloWorldServiceImpl;
 
 import java.util.Arrays;
 

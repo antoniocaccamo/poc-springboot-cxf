@@ -1,4 +1,4 @@
-package me.antoniocaccamo.cxf.prime.impl;
+package me.antoniocaccamo.cxf.prime.server.jaxws.impl;
 
 import me.antoniocaccamo.cxf.prime.xsd.Greeting;
 import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService;
