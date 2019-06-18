@@ -2,22 +2,22 @@ spring:
   main:
     banner-mode: "off"
 
-cxf:
-  path : /services
-
-
 server:
-  port: 8080
+  port: 8090
   ssl:
-    key-store: /opt/development/workspaces/antoniocaccamo/cxf-prime/certificates/server/cxf-prime-server.keystore
+    enabled: true
+#    client-auth: true    # mutual authentication
+    key-store: /development/workspaces/antoniocaccamo/cxf-prime/certificates/server/cxf-prime-server.keystore
     key-alias: cxf-prime-server
     key-password: Passw0rd!
 
-security:
-  require-ssl: true
-
 wss4j:
   enabled: true
-  key-store: /opt/development/workspaces/antoniocaccamo/cxf-prime/certificates/server/cxf-prime-server.keystore
-  key-alias: cxf-prime-server
-  key-password: Passw0rd!
+  callback:
+    keypairs:  cxf-prime-client-1 , Passw0rd! | cxf-prime-client-2 , Passw0rd!
+  encrypt:
+    username: useReqSigCert
+    file : wss/encrypt.properties
+  signature:
+    username: cxf-prime-server
+    file : wss/signature.properties

@@ -4,8 +4,20 @@ spring:
 
 client:
   HelloWorldService:
-    address: https://localhost:8080/services/hello
+    address: https://localhost:8090/services/hello
 
 ssl:
-  trust-store: /opt/development/workspaces/antoniocaccamo/cxf-prime/certificates/client/cxf-prime-client-1.keystore
+  trust-store: /development/workspaces/antoniocaccamo/cxf-prime/certificates/client/cxf-prime-client-1.keystore
   trust-store-password: Passw0rd!
+
+
+wss4j:
+  enabled: true
+  callback:
+    keypairs:  cxf-prime-client-1 , Passw0rd! | cxf-prime-client-2 , Passw0rd!
+  encrypt:
+    username: cxf-prime-server
+    file : wss/encrypt.properties
+  signature:
+    username: cxf-prime-client-1
+    file : wss/signature.properties

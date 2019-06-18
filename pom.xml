@@ -48,6 +48,14 @@
 			<version>${cxf.version}</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-ws-security -->
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-ws-security</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-transports-http-jetty -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>

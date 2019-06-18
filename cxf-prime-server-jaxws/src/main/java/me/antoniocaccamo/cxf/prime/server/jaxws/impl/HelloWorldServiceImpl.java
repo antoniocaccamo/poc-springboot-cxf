@@ -1,10 +1,10 @@
 package me.antoniocaccamo.cxf.prime.server.jaxws.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import me.antoniocaccamo.cxf.prime.xsd.Greeting;
 import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService;
+import me.antoniocaccamo.cxf.prime.xsd.Greeting;
 import me.antoniocaccamo.cxf.prime.xsd.Person;
-import org.springframework.stereotype.Component;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
 
 import javax.jws.WebService;
 
@@ -12,7 +12,7 @@ import javax.jws.WebService;
         endpointInterface = "me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService" ,
         targetNamespace   = "http://antoniocaccamo.me/cxf/prime/wsdl",
         name = "HelloWorldService"
-) @Component @Slf4j
+)  @Slf4j
 public class HelloWorldServiceImpl implements HelloWorldService {
 
     public Greeting sayHello(Person person) {
