@@ -13,6 +13,7 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.security.SecurityConstants;
+import org.apache.cxf.ws.security.wss4j.DefaultCryptoCoverageChecker;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.wss4j.dom.handler.WSHandlerConstants;
@@ -102,6 +103,7 @@ public class CxfPrimeClientJaxWsConfiguration {
 
             client.getOutInterceptors().add(new WSS4JOutInterceptor(wss4jMap));
             client.getInInterceptors().add( new WSS4JInInterceptor(wss4jMap));
+            client.getInInterceptors().add( new DefaultCryptoCoverageChecker());
 
 
 
