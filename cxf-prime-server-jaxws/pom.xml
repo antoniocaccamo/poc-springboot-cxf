@@ -17,7 +17,7 @@
 	</parent>
 
 	<properties>
-		<main.class>me.antoniocaccamo.cxf.prime.client.jaxws.CxfPrimeClientJaxWsApplication</main.class>
+		<main.class>me.antoniocaccamo.cxf.prime.server.jaxws.CxfPrimeServerJaxWsApplication</main.class>
 	</properties>
 
 	<dependencies>
@@ -58,7 +58,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<jvmArguments>
-						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Djavax.ssl.debug=true
 					</jvmArguments>
 				</configuration>
 
@@ -77,8 +77,6 @@
 				</executions>
 				<configuration>
 					<executable>${java.home}\bin\java</executable>
-
-					<classpathScope>compile</classpathScope>
 
 					<arguments>
 						<argument>-classpath</argument>

@@ -9,11 +9,17 @@
 
 	<artifactId>cxf-prime-client</artifactId>
 
+	<packaging>jar</packaging>
+
 	<parent>
 		<groupId>me.antoniocaccamo</groupId>
 		<artifactId>cxf-prime</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
+
+	<properties>
+		<main.class>me.antoniocaccamo.cxf.prime.client.jaxws.CxfPrimeClientJaxWsApplication</main.class>
+	</properties>
 
 	<dependencies>
 
@@ -38,11 +44,6 @@
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-transports-http</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-ws-security</artifactId>
-			<version>3.3.0</version>
-		</dependency>
 
 	</dependencies>
 
@@ -59,8 +60,37 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<jvmArguments>
-						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+						-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5006
 					</jvmArguments>
+				</configuration>
+
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>${java.home}\bin\java</executable>
+
+					<arguments>
+						<argument>-classpath</argument>
+						<!-- automatically creates the classpath using all project dependencies,
+                            also adding the project build directory -->
+						<classpath />
+						<argument>${main.class}</argument>
+					</arguments>
+
+					<mainClass>${main.class}</mainClass>
+
+
 				</configuration>
 
 			</plugin>

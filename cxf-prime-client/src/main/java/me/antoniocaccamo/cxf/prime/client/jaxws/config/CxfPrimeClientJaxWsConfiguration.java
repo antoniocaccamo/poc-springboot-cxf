@@ -13,6 +13,7 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.security.SecurityConstants;
+import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,22 +84,24 @@ public class CxfPrimeClientJaxWsConfiguration {
             Map<String, Object> wss4jMap = new HashMap<>();
 
             wss4jMap.put(WSHandlerConstants.ACTION,
-                    WSHandlerConstants.TIMESTAMP + " " +
+                            WSHandlerConstants.TIMESTAMP + " " +
                             WSHandlerConstants.SIGNATURE + " " +
-                            WSHandlerConstants.ENCRYPT);
+                            WSHandlerConstants.ENCRYPT
+            );
             wss4jMap.put(WSHandlerConstants.PW_CALLBACK_REF, new CxfPrimeCallbackHandler(keypairs));
             wss4jMap.put(WSHandlerConstants.SIGNATURE_USER  , wss4jSignatureUsername);
             wss4jMap.put(WSHandlerConstants.SIG_PROP_FILE, StringUtils.replace(wss4jSignaturePropsFile, "\\","/"));
-            wss4jMap.put(WSHandlerConstants.SIGNATURE_PARTS, "{}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp;{}{http://schemas.xmlsoap.org/soap/envelope/}Body;");
+            wss4jMap.put(WSHandlerConstants.SIGNATURE_PARTS, "{}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp;{}{}Body;");
 
             wss4jMap.put(WSHandlerConstants.ENCRYPTION_USER , wss4jEncryptUsername);
             wss4jMap.put(WSHandlerConstants.ENC_PROP_FILE, StringUtils.replace(wss4jEncryptPropsFile, "\\","/"));
-            wss4jMap.put(WSHandlerConstants.ENCRYPTION_PARTS, "{}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp;{}{http://schemas.xmlsoap.org/soap/envelope/}Body;");
+            wss4jMap.put(WSHandlerConstants.DEC_PROP_FILE, StringUtils.replace(wss4jEncryptPropsFile, "\\","/"));
+            wss4jMap.put(WSHandlerConstants.ENCRYPTION_PARTS, "{}{}Body;");
 
-            WSS4JOutInterceptor wss4JOutInterceptor = new WSS4JOutInterceptor() ;
-            wss4JOutInterceptor.setProperties(wss4jMap);
 
-            client.getOutInterceptors().add(wss4JOutInterceptor);
+
+            client.getOutInterceptors().add(new WSS4JOutInterceptor(wss4jMap));
+            client.getInInterceptors().add( new WSS4JInInterceptor(wss4jMap));
 
 
 

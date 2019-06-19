@@ -1,7 +1,7 @@
 package me.antoniocaccamo.cxf.prime.server.jaxws.impl;
 
-import me.antoniocaccamo.cxf.prime.xsd.Greeting;
 import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService;
+import me.antoniocaccamo.cxf.prime.xsd.Greeting;
 import me.antoniocaccamo.cxf.prime.xsd.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

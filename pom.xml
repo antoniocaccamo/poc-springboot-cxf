@@ -63,10 +63,10 @@
 			<version>${cxf.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.ws</groupId>
-			<artifactId>spring-ws-security</artifactId>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.ws</groupId>-->
+			<!--<artifactId>spring-ws-security</artifactId>-->
+		<!--</dependency>-->
 
 
 		<dependency>
@@ -133,22 +133,17 @@
 			</plugin>
 
 			<!--https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>9.4.14.v20181114</version>
-			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>org.eclipse.jetty</groupId>-->
+				<!--<artifactId>jetty-maven-plugin</artifactId>-->
+				<!--<version>9.4.14.v20181114</version>-->
+			<!--</plugin>-->
 
 			<!--<plugin> -->
 			<!--<groupId>org.apache.tomcat.maven</groupId> -->
 			<!--<artifactId>tomcat7-maven-plugin</artifactId> -->
 			<!--<version>2.2</version> -->
 			<!--</plugin> -->
-
-
-
-
-
 
 
 		</plugins>

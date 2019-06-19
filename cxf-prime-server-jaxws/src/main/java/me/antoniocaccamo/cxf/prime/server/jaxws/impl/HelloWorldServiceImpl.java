@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService;
 import me.antoniocaccamo.cxf.prime.xsd.Greeting;
 import me.antoniocaccamo.cxf.prime.xsd.Person;
-import org.springframework.ws.server.endpoint.annotation.Endpoint;
 
 import javax.jws.WebService;
 

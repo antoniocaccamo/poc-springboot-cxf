@@ -14,7 +14,7 @@ server:
 wss4j:
   enabled: true
   callback:
-    keypairs:  cxf-prime-client-1 , Passw0rd! | cxf-prime-client-2 , Passw0rd!
+    keypairs:  cxf-prime-server , Passw0rd! | cxf-prime-client-1 , Passw0rd! | cxf-prime-client-2 , Passw0rd!
   encrypt:
     username: useReqSigCert
     file : wss/encrypt.properties

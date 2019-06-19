@@ -3,7 +3,9 @@ package me.antoniocaccamo.cxf.prime.server.jaxws.config;
 import lombok.extern.slf4j.Slf4j;
 import me.antoniocaccamo.cxf.prime.callback.CxfPrimeCallbackHandler;
 import me.antoniocaccamo.cxf.prime.server.jaxws.impl.HelloWorldServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.Bus;
+import org.apache.cxf.binding.soap.saaj.SAAJInInterceptor;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.endpoint.Endpoint;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
@@ -12,6 +14,7 @@ import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.apache.cxf.ws.security.SecurityConstants;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
+import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -74,20 +77,27 @@ public class CxfPrimeServerJaxWsConfiguration     {
         Map<String, Object> wss4jMap = new HashMap<>();
 
         wss4jMap.put(WSHandlerConstants.ACTION,
-                WSHandlerConstants.TIMESTAMP + " " +
+                        WSHandlerConstants.TIMESTAMP + " " +
                         WSHandlerConstants.SIGNATURE + " " +
-                        WSHandlerConstants.ENCRYPT);
-        wss4jMap.put(SecurityConstants.CALLBACK_HANDLER, new CxfPrimeCallbackHandler(keypairs));
-        wss4jMap.put(SecurityConstants.SIGNATURE_USERNAME  , wss4jSignatureUsername);
-        wss4jMap.put(SecurityConstants.SIGNATURE_PROPERTIES, wss4jSignaturePropsFile);
+                        WSHandlerConstants.ENCRYPT
+        );
+        wss4jMap.put(WSHandlerConstants.PW_CALLBACK_REF , new CxfPrimeCallbackHandler(keypairs));
+        wss4jMap.put(WSHandlerConstants.SIGNATURE_USER  , wss4jSignatureUsername);
+        wss4jMap.put(WSHandlerConstants.SIG_PROP_FILE   , StringUtils.replace(wss4jSignaturePropsFile, "\\","/"));
+        wss4jMap.put(WSHandlerConstants.SIGNATURE_PARTS, "{}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp;{}{}Body;");
 
-        wss4jMap.put(SecurityConstants.ENCRYPT_USERNAME , wss4jEncryptUsername);
-        wss4jMap.put(SecurityConstants.SIGNATURE_PROPERTIES, wss4jEncryptPropsFile);
+        wss4jMap.put(WSHandlerConstants.ENCRYPTION_USER , wss4jEncryptUsername);
+        wss4jMap.put(WSHandlerConstants.ENC_PROP_FILE   , StringUtils.replace(wss4jEncryptPropsFile, "\\","/"));
+        wss4jMap.put(WSHandlerConstants.DEC_PROP_FILE   , StringUtils.replace(wss4jEncryptPropsFile, "\\","/"));
+        wss4jMap.put(WSHandlerConstants.ENCRYPTION_PARTS, "{}{}Body;");
 
-        WSS4JInInterceptor wss4JInInterceptor = new WSS4JInInterceptor();
-        wss4JInInterceptor.setProperties(wss4jMap);
+        log.info("wss4jMap {}", wss4jMap);
 
-        cxfEndPoint.getInInterceptors().add(wss4JInInterceptor);
+
+        cxfEndPoint.getInInterceptors().add( new WSS4JInInterceptor(wss4jMap));
+        cxfEndPoint.getOutInterceptors().add(new WSS4JOutInterceptor(wss4jMap));
+
+        //cxfEndPoint.getInInterceptors().add(new SAAJInInterceptor());
 
         cxfEndPoint.getInInterceptors().add(  new LoggingInInterceptor());
         cxfEndPoint.getOutInterceptors().add( new LoggingOutInterceptor());
