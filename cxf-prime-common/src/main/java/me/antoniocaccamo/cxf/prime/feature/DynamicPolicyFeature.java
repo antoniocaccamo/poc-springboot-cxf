@@ -1,7 +1,7 @@
 package me.antoniocaccamo.cxf.prime.feature;
 
-import me.antoniocaccamo.cxf.prime.interceptor.DynamicInPolicyIntercptor;
-import me.antoniocaccamo.cxf.prime.interceptor.DynamicOutPolicyIntercptor;
+import me.antoniocaccamo.cxf.prime.interceptor.DynamicInPolicyInterceptor;
+import me.antoniocaccamo.cxf.prime.interceptor.DynamicOutPolicyInterceptor;
 import org.apache.cxf.Bus;
 import org.apache.cxf.feature.AbstractFeature;
 import org.apache.cxf.interceptor.InterceptorProvider;
@@ -11,12 +11,12 @@ import org.apache.cxf.interceptor.InterceptorProvider;
  */
 public class DynamicPolicyFeature extends AbstractFeature {
 
-    private final DynamicInPolicyIntercptor  in;
-    private final DynamicOutPolicyIntercptor out;
+    private final DynamicInPolicyInterceptor in;
+    private final DynamicOutPolicyInterceptor out;
 
     public DynamicPolicyFeature(String policyFile){
-        in  = new DynamicInPolicyIntercptor(policyFile);
-        out = new DynamicOutPolicyIntercptor(policyFile);
+        in  = new DynamicInPolicyInterceptor(policyFile);
+        out = new DynamicOutPolicyInterceptor(policyFile);
     }
 
     @Override

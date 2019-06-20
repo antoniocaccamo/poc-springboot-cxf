@@ -3,7 +3,6 @@ package me.antoniocaccamo.cxf.prime.interceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.cxf.message.Message;
 import org.apache.neethi.Policy;
-import org.apache.neethi.PolicyBuilder;
 
 import java.io.InputStream;
 
@@ -16,8 +15,9 @@ public class CxfPrimePolicyHelper {
     public static Policy parsePolicy(Message message,  String policyFile) {
 
         Policy policy = null;
-
         try {
+
+            log.info("loading policy from file : {}", policyFile);
             InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(policyFile);
 
             org.apache.cxf.ws.policy.PolicyBuilder builder = message.getExchange()

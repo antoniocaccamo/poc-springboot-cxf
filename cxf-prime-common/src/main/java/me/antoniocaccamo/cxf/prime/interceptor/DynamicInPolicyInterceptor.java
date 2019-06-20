@@ -7,13 +7,12 @@ import org.apache.cxf.ws.policy.PolicyInInterceptor;
 /**
  * Created by antonio on 20/06/2019.
  */
-public class DynamicInPolicyIntercptor  extends CxfPrimeAbstractPolicyInterceptor{
+public class DynamicInPolicyInterceptor extends CxfPrimeAbstractPolicyInterceptor{
 
 
-    public DynamicInPolicyIntercptor(String policyFile) {
-        super(Phase.RECEIVE);
+    public DynamicInPolicyInterceptor(String policyFile) {
+        super(Phase.RECEIVE, policyFile);
         getBefore().add(PolicyInInterceptor.class.getName());
-        this.policyFile = policyFile;
     }
 
 

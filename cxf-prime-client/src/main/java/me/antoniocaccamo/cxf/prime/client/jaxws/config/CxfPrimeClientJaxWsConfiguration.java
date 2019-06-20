@@ -1,8 +1,11 @@
 package me.antoniocaccamo.cxf.prime.client.jaxws.config;
 
 import lombok.extern.slf4j.Slf4j;
+import me.antoniocaccamo.cxf.prime.CxfPrimeConstants;
 import me.antoniocaccamo.cxf.prime.callback.CxfPrimeCallbackHandler;
 import me.antoniocaccamo.cxf.prime.feature.DynamicPolicyFeature;
+import me.antoniocaccamo.cxf.prime.interceptor.DynamicInPolicyInterceptor;
+import me.antoniocaccamo.cxf.prime.interceptor.DynamicOutPolicyInterceptor;
 import me.antoniocaccamo.cxf.prime.wsdl.HelloWorldService;
 import me.antoniocaccamo.cxf.prime.xsd.ObjectFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -24,15 +27,15 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
-import javax.xml.ws.BindingProvider;
 import java.io.FileInputStream;
 import java.security.KeyStore;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration @Slf4j
+@Configuration
+@Slf4j
 public class CxfPrimeClientJaxWsConfiguration {
-
 
     @Value("${client.HelloWorldService.address}")
     private String address;
@@ -67,17 +70,15 @@ public class CxfPrimeClientJaxWsConfiguration {
     @Value("${wss4j.policy.file}")
     private String wss4jPolicyFile;
 
-
-
     @Bean
-    public ObjectFactory helloWorldObjectFactory(){
+    public ObjectFactory helloWorldObjectFactory() {
         return new ObjectFactory();
     }
 
-    @Bean
-    public DynamicPolicyFeature dynamicPolicyFeature(){
-        return new DynamicPolicyFeature(wss4jPolicyFile);
-    }
+     @Bean
+     public DynamicPolicyFeature dynamicPolicyFeature(){
+     return new DynamicPolicyFeature(wss4jPolicyFile);
+     }
 
     @Bean
     public HelloWorldService helloWorldService() throws Exception {
@@ -85,57 +86,62 @@ public class CxfPrimeClientJaxWsConfiguration {
         jaxWsProxyFactoryBean.setAddress(address);
         jaxWsProxyFactoryBean.setServiceClass(HelloWorldService.class);
 
-
         HelloWorldService proxy = (HelloWorldService) jaxWsProxyFactoryBean.create();
-
 
         Client client = ClientProxy.getClient(proxy);
 
-        if (StringUtils.startsWithIgnoreCase(address, "https") ) {
+        if (StringUtils.startsWithIgnoreCase(address, "https")) {
             configureSSL(client);
         }
 
-        if ( wss4jEnabled ) {
+        if (wss4jEnabled) {
             Map<String, Object> wss4jMap = new HashMap<>();
 
-            if ( wss4jPolicyEnabled) {
+            if (wss4jPolicyEnabled) {
                 wss4jMap.put(SecurityConstants.CALLBACK_HANDLER    , new CxfPrimeCallbackHandler(keypairs));
                 wss4jMap.put(SecurityConstants.ENCRYPT_USERNAME    , wss4jEncryptUsername);
                 wss4jMap.put(SecurityConstants.ENCRYPT_PROPERTIES  , StringUtils.replace(wss4jEncryptPropsFile, "\\", "/"));
                 wss4jMap.put(SecurityConstants.SIGNATURE_USERNAME  , wss4jSignatureUsername);
                 wss4jMap.put(SecurityConstants.SIGNATURE_PROPERTIES, StringUtils.replace(wss4jSignaturePropsFile, "\\", "/"));
 
-                jaxWsProxyFactoryBean.getProperties().putAll(wss4jMap);
-                jaxWsProxyFactoryBean.getFeatures().add(dynamicPolicyFeature());
+                client.getEndpoint().putAll(wss4jMap);
+                client.getInInterceptors().add( new DynamicInPolicyInterceptor( wss4jPolicyFile));
+                client.getOutInterceptors().add(new DynamicOutPolicyInterceptor(wss4jPolicyFile));
 
             } else {
 
-                wss4jMap.put(WSHandlerConstants.ACTION,
-                        WSHandlerConstants.TIMESTAMP + " " +
-                                WSHandlerConstants.SIGNATURE + " " +
-                                WSHandlerConstants.ENCRYPT
+                wss4jMap.put(
+                        WSHandlerConstants.ACTION,
+                            StringUtils.join(
+                                Arrays.asList(
+                                    WSHandlerConstants.TIMESTAMP,
+                                    WSHandlerConstants.SIGNATURE,
+                                    WSHandlerConstants.ENCRYPT
+                            ),
+                            " "
+                        )
                 );
                 wss4jMap.put(WSHandlerConstants.PW_CALLBACK_REF, new CxfPrimeCallbackHandler(keypairs));
-                wss4jMap.put(WSHandlerConstants.SIGNATURE_USER, wss4jSignatureUsername);
-                wss4jMap.put(WSHandlerConstants.SIG_PROP_FILE, StringUtils.replace(wss4jSignaturePropsFile, "\\", "/"));
-                wss4jMap.put(WSHandlerConstants.SIGNATURE_PARTS, "{}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp;{}{}Body;");
+                wss4jMap.put(WSHandlerConstants.SIGNATURE_USER , wss4jSignatureUsername);
+                wss4jMap.put(WSHandlerConstants.SIG_PROP_FILE  , StringUtils.replace(wss4jSignaturePropsFile, "\\", "/"));
+                wss4jMap.put(WSHandlerConstants.SIGNATURE_PARTS, CxfPrimeConstants.Signature.PARTS);
 
-                wss4jMap.put(WSHandlerConstants.ENCRYPTION_USER, wss4jEncryptUsername);
-                wss4jMap.put(WSHandlerConstants.ENC_PROP_FILE, StringUtils.replace(wss4jEncryptPropsFile, "\\", "/"));
-                wss4jMap.put(WSHandlerConstants.DEC_PROP_FILE, StringUtils.replace(wss4jEncryptPropsFile, "\\", "/"));
-                wss4jMap.put(WSHandlerConstants.ENCRYPTION_PARTS, "{}{}Body;");
-
+                wss4jMap.put(WSHandlerConstants.ENCRYPTION_USER , wss4jEncryptUsername);
+                wss4jMap.put(WSHandlerConstants.ENC_PROP_FILE   , StringUtils.replace(wss4jEncryptPropsFile, "\\", "/"));
+                wss4jMap.put(WSHandlerConstants.DEC_PROP_FILE   , StringUtils.replace(wss4jEncryptPropsFile, "\\", "/"));
+                wss4jMap.put(WSHandlerConstants.ENCRYPTION_PARTS, CxfPrimeConstants.Encrypt.PARTS);
 
                 client.getOutInterceptors().add(new WSS4JOutInterceptor(wss4jMap));
-                client.getInInterceptors().add(new WSS4JInInterceptor(wss4jMap));
-                client.getInInterceptors().add(new DefaultCryptoCoverageChecker());
+                client.getInInterceptors().add( new WSS4JInInterceptor(wss4jMap));
+                client.getInInterceptors().add (new DefaultCryptoCoverageChecker());
 
             }
 
-            client.getEndpoint().getInInterceptors().add(  new LoggingInInterceptor());
-            client.getEndpoint().getOutInterceptors().add( new LoggingOutInterceptor());
+            client.getEndpoint().getInInterceptors().add(new LoggingInInterceptor());
+            client.getEndpoint().getOutInterceptors().add(new LoggingOutInterceptor());
 
             log.info("wss4jMap : {}", wss4jMap);
+            log.info("wss4jEnabled [{}] wss4jPolicyEnabled [{}]", wss4jEnabled, wss4jPolicyEnabled);
         }
         return proxy;
     }
@@ -148,14 +154,14 @@ public class CxfPrimeClientJaxWsConfiguration {
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         keyManagerFactory.init(keyStore, trustStorePassword.toCharArray());
 
-        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory
+                .getInstance(TrustManagerFactory.getDefaultAlgorithm());
         trustManagerFactory.init(keyStore);
 
         TLSClientParameters tlsClientParameters = new TLSClientParameters();
         tlsClientParameters.setDisableCNCheck(true);
         tlsClientParameters.setKeyManagers(keyManagerFactory.getKeyManagers());
         tlsClientParameters.setTrustManagers(trustManagerFactory.getTrustManagers());
-
 
         HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
         httpConduit.setTlsClientParameters(tlsClientParameters);
