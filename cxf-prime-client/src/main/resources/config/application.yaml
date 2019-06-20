@@ -7,7 +7,7 @@ client:
     address: https://localhost:8090/services/hello
 
 ssl:
-  trust-store: /development/workspaces/antoniocaccamo/cxf-prime/certificates/client/cxf-prime-client-1.keystore
+  trust-store: ../certificates/client/cxf-prime-client-1.keystore
   trust-store-password: Passw0rd!
 
 
@@ -21,3 +21,6 @@ wss4j:
   signature:
     username: cxf-prime-client-1
     file : wss/signature.properties
+  policy:
+    enabled : true
+    file : wss/policy.xml
