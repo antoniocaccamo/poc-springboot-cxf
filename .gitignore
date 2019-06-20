@@ -97,3 +97,4 @@ libssb-core/test-output/
 **/*.keystore
 **/*.cer
 
+.vscode/*
