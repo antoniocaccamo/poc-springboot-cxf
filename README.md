@@ -5,6 +5,7 @@
 - spring boot cxf client
 - ssl config on both
 - WSS4J X.509 Token Profile ( timestamp, signature and encryption )
+- WS Policy
 
 ## Steps
 1. execute [keystores generator script](certificates/generator.sh)
