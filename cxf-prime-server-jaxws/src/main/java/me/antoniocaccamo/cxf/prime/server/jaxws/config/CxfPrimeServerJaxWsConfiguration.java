@@ -1,11 +1,14 @@
 package me.antoniocaccamo.cxf.prime.server.jaxws.config;
 
 import lombok.extern.slf4j.Slf4j;
+import me.antoniocaccamo.cxf.prime.CxfPrimeConstants;
 import me.antoniocaccamo.cxf.prime.callback.CxfPrimeCallbackHandler;
+import me.antoniocaccamo.cxf.prime.feature.DynamicPolicyFeature;
+import me.antoniocaccamo.cxf.prime.interceptor.DynamicInPolicyInterceptor;
+import me.antoniocaccamo.cxf.prime.interceptor.DynamicOutPolicyInterceptor;
 import me.antoniocaccamo.cxf.prime.server.jaxws.impl.HelloWorldServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.Bus;
-import org.apache.cxf.binding.soap.saaj.SAAJInInterceptor;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.endpoint.Endpoint;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
@@ -22,6 +25,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,14 +51,11 @@ public class CxfPrimeServerJaxWsConfiguration     {
     @Value("${wss4j.callback.keypairs}")
     private String keypairs;
 
-//    @Override
-//    public void addInterceptors(List<EndpointInterceptor> interceptors) {
-//        try {
-//            interceptors.add(securityInterceptor());
-//        } catch (Exception e) {
-//            throw new RuntimeException("could not initialize security interceptor");
-//        }
-//    }
+    @Value("${wss4j.policy.enabled}")
+    private Boolean wss4jPolicyEnabled;
+
+    @Value("${wss4j.policy.file}")
+    private String wss4jPolicyFile;
 
     @Bean
     public ServletRegistrationBean dispachServlet() {
@@ -64,6 +65,11 @@ public class CxfPrimeServerJaxWsConfiguration     {
     @Bean(name = Bus.DEFAULT_BUS_ID)
     public SpringBus springBus(){
         return new SpringBus();
+    }
+
+    @Bean
+    public DynamicPolicyFeature dynamicPolicyFeature(){
+        return new DynamicPolicyFeature(wss4jPolicyFile);
     }
 
     @Bean
@@ -77,29 +83,48 @@ public class CxfPrimeServerJaxWsConfiguration     {
 
         Map<String, Object> wss4jMap = new HashMap<>();
 
-        wss4jMap.put(WSHandlerConstants.ACTION,
-                        WSHandlerConstants.TIMESTAMP + " " +
-                        WSHandlerConstants.SIGNATURE + " " +
-                        WSHandlerConstants.ENCRYPT
-        );
-        wss4jMap.put(WSHandlerConstants.PW_CALLBACK_REF , new CxfPrimeCallbackHandler(keypairs));
-        wss4jMap.put(WSHandlerConstants.SIGNATURE_USER  , wss4jSignatureUsername);
-        wss4jMap.put(WSHandlerConstants.SIG_PROP_FILE   , StringUtils.replace(wss4jSignaturePropsFile, "\\","/"));
-        wss4jMap.put(WSHandlerConstants.SIGNATURE_PARTS, "{}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp;{}{}Body;");
+        if ( wss4jPolicyEnabled) {
+            wss4jMap.put(SecurityConstants.CALLBACK_HANDLER    , new CxfPrimeCallbackHandler(keypairs));
+            wss4jMap.put(SecurityConstants.ENCRYPT_USERNAME    , wss4jEncryptUsername);
+            wss4jMap.put(SecurityConstants.ENCRYPT_PROPERTIES  , StringUtils.replace(wss4jEncryptPropsFile, "\\", "/"));
+            wss4jMap.put(SecurityConstants.SIGNATURE_USERNAME  , wss4jSignatureUsername);
+            wss4jMap.put(SecurityConstants.SIGNATURE_PROPERTIES, StringUtils.replace(wss4jSignaturePropsFile, "\\", "/"));
 
-        wss4jMap.put(WSHandlerConstants.ENCRYPTION_USER , wss4jEncryptUsername);
-        wss4jMap.put(WSHandlerConstants.ENC_PROP_FILE   , StringUtils.replace(wss4jEncryptPropsFile, "\\","/"));
-        wss4jMap.put(WSHandlerConstants.DEC_PROP_FILE   , StringUtils.replace(wss4jEncryptPropsFile, "\\","/"));
-        wss4jMap.put(WSHandlerConstants.ENCRYPTION_PARTS, "{}{}Body;");
+            cxfEndPoint.putAll(wss4jMap);
+            cxfEndPoint.getInInterceptors().add(new DynamicInPolicyInterceptor(wss4jPolicyFile));
+            cxfEndPoint.getOutInterceptors().add(new DynamicOutPolicyInterceptor(wss4jPolicyFile));
+
+
+        } else {
+
+            wss4jMap.put(
+                    WSHandlerConstants.ACTION,
+                    StringUtils.join(
+                            Arrays.asList(
+                                    WSHandlerConstants.TIMESTAMP,
+                                    WSHandlerConstants.SIGNATURE,
+                                    WSHandlerConstants.ENCRYPT
+                            ),
+                            " "
+                    )
+            );
+            wss4jMap.put(WSHandlerConstants.PW_CALLBACK_REF, new CxfPrimeCallbackHandler(keypairs));
+            wss4jMap.put(WSHandlerConstants.SIGNATURE_USER , wss4jSignatureUsername);
+            wss4jMap.put(WSHandlerConstants.SIG_PROP_FILE  , StringUtils.replace(wss4jSignaturePropsFile, "\\", "/"));
+            wss4jMap.put(WSHandlerConstants.SIGNATURE_PARTS, CxfPrimeConstants.Signature.PARTS);
+
+            wss4jMap.put(WSHandlerConstants.ENCRYPTION_USER , wss4jEncryptUsername);
+            wss4jMap.put(WSHandlerConstants.ENC_PROP_FILE   , StringUtils.replace(wss4jEncryptPropsFile, "\\", "/"));
+            wss4jMap.put(WSHandlerConstants.DEC_PROP_FILE   , StringUtils.replace(wss4jEncryptPropsFile, "\\", "/"));
+            wss4jMap.put(WSHandlerConstants.ENCRYPTION_PARTS, CxfPrimeConstants.Encrypt.PARTS);
+
+            cxfEndPoint.getOutInterceptors().add(new WSS4JOutInterceptor(wss4jMap));
+            cxfEndPoint.getInInterceptors().add( new WSS4JInInterceptor(wss4jMap));
+            cxfEndPoint.getInInterceptors().add (new DefaultCryptoCoverageChecker());
+        }
 
         log.info("wss4jMap {}", wss4jMap);
-
-
-        cxfEndPoint.getInInterceptors().add( new WSS4JInInterceptor(wss4jMap));
-        cxfEndPoint.getInInterceptors().add( new DefaultCryptoCoverageChecker());
-        cxfEndPoint.getOutInterceptors().add(new WSS4JOutInterceptor(wss4jMap));
-
-        //cxfEndPoint.getInInterceptors().add(new SAAJInInterceptor());
+        log.info("wss4jEnabled [{}] wss4jPolicyEnabled [{}]", wss4jEnabled, wss4jPolicyEnabled);
 
         cxfEndPoint.getInInterceptors().add(  new LoggingInInterceptor());
         cxfEndPoint.getOutInterceptors().add( new LoggingOutInterceptor());
