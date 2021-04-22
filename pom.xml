@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
-		<cxf.version>3.3.4</cxf.version>
+		<cxf.version>3.4.3</cxf.version>
 		<cxf-xjc.version>3.1.0</cxf-xjc.version>
 		<lombok.version>1.18.8</lombok.version>
 	</properties>
